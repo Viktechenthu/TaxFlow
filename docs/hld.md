@@ -175,71 +175,83 @@ User Registration/Login
 └──────────────────────┘
 ```
 
-## 4. Receipt Service 
+## 4. Receipt Service (Asynchronous Architecture)
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│                    RECEIPT PROCESSING FLOW                       │
+│                     RECEIPT PROCESSING FLOW                     │
+│               (Async / Event-Driven Architecture)               │
 └─────────────────────────────────────────────────────────────────┘
 
 User uploads receipt image
-         │
-         ▼
+          │
+          ▼
 ┌────────────────────────┐
-│ 1. UPLOAD & VALIDATION │
+│ 1. API INGESTION LAYER │
+│    (Synchronous)       │
 │    ─────────────────   │
-│    • Check file size   │
-│    • Check format      │
-│    • Virus scan        │
-└───────┬────────────────┘
-        │
-        ▼
+│    • Validate file     │
+│    • Upload to MinIO   │◄─────── [MinIO Storage]
+│    • Create DB Record  │         (Status: PENDING)
+│      (Status: QUEUED)  │
+│    • Push Job ID to    │
+│      Redis Queue       │
+│    • Return "202 OK"   │───────► User sees "Processing..."
+└─────────┬──────────────┘
+          │
+          ▼
 ┌────────────────────────┐
-│ 2. STORAGE             │
-│    ────────            │
-│    • Store in MinIO/S3 │
-│    • Generate URL      │
-│    • Create DB record  │
-└───────┬────────────────┘
-        │
-        ▼
-┌────────────────────────┐
-│ 3. OCR EXTRACTION      │
-│    ──────────────      │
-│    • Extract text      │
-│    • Find merchant     │
-│    • Find amount       │
-│    • Find date         │
-│    • Extract items     │
-└───────┬────────────────┘
-        │
-        ▼
-┌────────────────────────┐
-│ 4. AI CLASSIFICATION   │
+│ 2. JOB QUEUE (Redis)   │
 │    ─────────────────   │
-│    • Send to LLM       │
-│    • Get category      │
-│    • Get confidence    │
-│    • Apply CRA rules   │
-└───────┬────────────────┘
-        │
-        ▼
+│    • Buffers requests  │
+│    • Ensures no loss   │
+└─────────┬──────────────┘
+          │
+          ▼
 ┌────────────────────────┐
-│ 5. REVIEW ROUTING      │
-│    ──────────────      │
-│    • If conf > 0.9     │
-│      → Auto-approve    │
-│    • If conf < 0.9     │
-│      → Flag for review │
-└───────┬────────────────┘
-        │
-        ▼
+│ 3. BACKGROUND WORKER   │
+│    (Asynchronous)      │
+│    ─────────────────   │
+│    • Dequeue Job       │
+│    • Fetch Img (MinIO) │
+└─────────┬──────────────┘
+          │
+          ▼
 ┌────────────────────────┐
-│ 6. SAVE & NOTIFY       │
-│    ─────────────       │
-│    • Update DB         │
-│    • Send notification │
-│    • Update dashboard  │
+│ 4. INTELLIGENCE PIPELINE
+│    ─────────────────   │
+│    A. OCR ENGINE       │
+│       • Extract raw    │
+│         text/coordinates
+│                        │
+│    B. LLM CLASSIFIER   │
+│       • Prompt: "Map   │
+│         to CRA codes"  │
+│       • Output JSON    │
+└─────────┬──────────────┘
+          │
+          ▼
+┌────────────────────────┐
+│ 5. BUSINESS LOGIC      │
+│    ─────────────────   │
+│    • Confidence Check  │
+│      (If > 0.90)       │
+│        → Status: APPROVED
+│      (If < 0.90)       │
+│        → Status: REVIEW
+│                        │
+│    • Rules Engine      │
+│      (e.g., if "Meals" │
+│       set deduct=50%)  │
+└─────────┬──────────────┘
+          │
+          ▼
+┌────────────────────────┐
+│ 6. COMPLETION & NOTIFY │
+│    ─────────────────   │
+│    • Update PostgreSQL │
+│    • Trigger WebSocket │───────► Frontend updates
+│      event             │         automatically
 └────────────────────────┘
 
 ```
