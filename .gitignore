@@ -1,239 +1,46 @@
-# Byte-compiled / optimized / DLL files
+# Environment variables (SECRETS!)
+.env
+.env.*
+!.env.example
+
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
 *.so
-
-# Distribution / packaging
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# PyInstaller
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-cover/
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-.pybuilder/
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-# .python-version
-
-# pipenv
-# Pipfile.lock
-
-# poetry
-# poetry.lock
-
-# pdm
-# pdm.lock
-.pdm-python
-.pdm-build/
-
-# PEP 582
-__pypackages__/
-
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.envrc
-.venv
-env/
 venv/
+env/
 ENV/
-env.bak/
-venv.bak/
+.venv
 
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
-# pytype static type analyzer
-.pytype/
-
-# Cython debug symbols
-cython_debug/
-
-# PyCharm
-.idea/
-
-# Visual Studio Code
+# IDEs
 .vscode/
-
-# Ruff
-.ruff_cache/
-
-# PyPI configuration file
-.pypirc
-
-# Cursor
-.cursorignore
-.cursorindexingignore
-
-# ============================================
-# Project-specific ignores (TaxFlow)
-# ============================================
-
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-._*
-
-# Environment files (additional patterns)
-.env.local
-.env.*.local
-.env.production
-.env.development
-.env.test
-*.env
-
-# Database files and dumps
-*.db
-*.sqlite
-*.sqlite3
-*.sql
-*.dump
-*.backup
-pgdata/
-postgres-data/
-*.pg_dump
-
-# Logs
-logs/
-*.log
-*.log.*
-
-# Temporary files
-tmp/
-temp/
-*.tmp
+.idea/
 *.swp
 *.swo
 *~
+.DS_Store
 
-# FastAPI / Uvicorn
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+postgres_data/
+
+# Testing
 .pytest_cache/
 .coverage
 htmlcov/
 
-# Test files (uncomment if you want to ignore test scripts)
-# test_*.py
-# *_test.py
-# tests/
+# Distribution
+build/
+dist/
+*.egg-info/
 
-# Local development scripts (uncomment if needed)
-# setup_database.py
-# setup_db.py
-
-# Alembic (keep migrations, but ignore if you have local test migrations)
-# alembic/versions/*.pyc
-
-# Uploaded files / media (if you have file uploads)
-uploads/
-media/
-static/uploads/
-
-# MinIO / S3 local data (if using)
-minio-data/
-s3-data/
-
-# AI/ML model files (if storing locally)
-models/
-*.pkl
-*.h5
-*.pt
-*.pth
-
-# Docker
-.dockerignore
-docker-compose.override.yml
-
-# Local configuration overrides
-config.local.py
-settings.local.py
-
+# OS
+Thumbs.db
