@@ -1,5 +1,5 @@
 # app/db/models/user.py
-
+from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String, Boolean, DateTime, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
@@ -101,6 +101,9 @@ class User(Base):
     
     # Soft delete
     deleted_at = Column(DateTime, nullable=True)
+
+    profile = relationship("UserProfile", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    roles = relationship("UserRole", foreign_keys="[UserRole.user_id]", back_populates="user", cascade="all, delete-orphan")
     
     # String representation (useful for debugging)
     def __repr__(self):

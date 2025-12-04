@@ -13,7 +13,7 @@ from app.db.session import Base
 from app.core.config import settings
 
 # Import ALL models here (important!)
-from app.db.models.user import User
+from app.db.models import User, UserProfile, UserRole
 
 # Alembic Config
 config = context.config
